@@ -622,11 +622,11 @@ export const api = {
 
       return await response.text();
     },
-    // Orders export
+    // Orders export (returns JSON for Excel conversion)
     exportOrders: async () => {
       const response = await fetch(`${API_BASE_URL}/admin/orders/export`, {
         headers: {
-          'Content-Type': 'text/csv',
+          'Content-Type': 'application/json',
           ...(typeof window !== 'undefined' ? {
             Authorization: `Bearer ${getAuthToken()}`
           } : {})
@@ -637,7 +637,7 @@ export const api = {
         throw new Error(`Export failed: ${response.status}`);
       }
 
-      return await response.text();
+      return await response.json();
     },
     // Categories management
     getCategories: () => apiClient.request('/admin/categories'),

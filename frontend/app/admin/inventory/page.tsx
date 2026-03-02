@@ -153,7 +153,7 @@ export default function AdminInventoryPage() {
       const statsResponse = await api.admin.getInventory({ limit: 10000 }) as { products: Product[] }
       const allProducts = statsResponse.products || []
 
-      // Calculate stats using total stock (main stock + sizes)
+      // Calculate stats using totalStock from backend (already calculated correctly)
       let totalStock = 0
       let totalValueRetail = 0
       let totalValueCost = 0
@@ -161,8 +161,8 @@ export default function AdminInventoryPage() {
       let outOfStockProducts = 0
 
       allProducts.forEach(product => {
-        const sizesTotal = (product.sizes || []).reduce((sum, size) => sum + (size.stock || 0), 0)
-        const productTotalStock = (product.stock || 0) + sizesTotal
+        // Use totalStock from backend (already includes main stock + sizes)
+        const productTotalStock = product.totalStock || 0
 
         totalStock += productTotalStock
         const price = product.price || 0

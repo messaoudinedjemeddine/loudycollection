@@ -762,7 +762,7 @@ router.get('/orders', async (req, res) => {
   }
 });
 
-// Export orders to CSV
+// Export orders to JSON (for Excel conversion on frontend with proper UTF-8 handling)
 router.get('/orders/export', async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
@@ -778,27 +778,8 @@ router.get('/orders/export', async (req, res) => {
       orderBy: { createdAt: 'desc' }
     });
 
-    // Create CSV headers
-    const headers = [
-      'Order Number',
-      'Customer Name',
-      'Customer Phone',
-      'Customer Email',
-      'Order Date',
-      'Delivery Type',
-      'City',
-      'Delivery Address/Desk',
-      'Call Center Status',
-      'Delivery Status',
-      'Subtotal (DA)',
-      'Delivery Fee (DA)',
-      'Total (DA)',
-      'Items',
-      'Notes'
-    ];
-
-    // Create CSV rows
-    const rows = orders.map(order => {
+    // Prepare data for Excel export with proper UTF-8 handling
+    const exportData = orders.map(order => {
       const items = order.items.map(item =>
         `${item.quantity}x ${item.product.name}${item.size ? ` (Size: ${item.size})` : ''}`
       ).join('; ');
@@ -807,39 +788,26 @@ router.get('/orders/export', async (req, res) => {
         ? (order.deliveryAddress || 'Home Delivery')
         : (order.deliveryDesk?.name || 'Pickup');
 
-      return [
-        order.orderNumber,
-        order.customerName,
-        order.customerPhone,
-        order.customerEmail || '',
-        new Date(order.createdAt).toLocaleDateString(),
-        order.deliveryType === 'HOME_DELIVERY' ? 'Home Delivery' : 'Pickup',
-        order.city.name,
-        deliveryInfo,
-        order.callCenterStatus,
-        order.deliveryStatus,
-        order.subtotal.toLocaleString(),
-        order.deliveryFee.toLocaleString(),
-        order.total.toLocaleString(),
-        items,
-        order.notes || ''
-      ];
+      return {
+        'Order Number': order.orderNumber,
+        'Customer Name': order.customerName,
+        'Customer Phone': order.customerPhone,
+        'Customer Email': order.customerEmail || '',
+        'Order Date': new Date(order.createdAt).toLocaleDateString(),
+        'Delivery Type': order.deliveryType === 'HOME_DELIVERY' ? 'Home Delivery' : 'Pickup',
+        'City': order.city.name,
+        'Delivery Address/Desk': deliveryInfo,
+        'Call Center Status': order.callCenterStatus,
+        'Delivery Status': order.deliveryStatus,
+        'Subtotal (DA)': order.subtotal.toLocaleString(),
+        'Delivery Fee (DA)': order.deliveryFee.toLocaleString(),
+        'Total (DA)': order.total.toLocaleString(),
+        'Items': items,
+        'Notes': order.notes || ''
+      };
     });
 
-    // Combine headers and rows
-    const csvContent = [headers, ...rows]
-      .map(row => row.map(cell => `"${cell}"`).join(','))
-      .join('\n');
-
-    // Add UTF-8 BOM for proper Excel encoding (especially for Arabic characters)
-    const csvWithBOM = '\uFEFF' + csvContent;
-
-    // Set response headers for CSV download
-    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition', `attachment; filename="orders-${new Date().toISOString().split('T')[0]}.csv"`);
-    res.setHeader('Cache-Control', 'no-cache');
-
-    res.send(csvWithBOM);
+    res.json({ orders: exportData });
   } catch (error) {
     console.error('Export orders error:', error);
     res.status(500).json({ error: 'Failed to export orders' });

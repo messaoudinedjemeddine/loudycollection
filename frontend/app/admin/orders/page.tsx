@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect } from 'react'
 import { useAuthStore } from '@/lib/store'
+import * as XLSX from 'xlsx'
 
 // ... existing imports ...
 
@@ -490,18 +491,15 @@ function OrdersContent() {
   const handleExportOrders = async () => {
     try {
       toast.loading('Exporting orders...')
-      const csvData = await api.admin.exportOrders()
+      const response = await api.admin.exportOrders() as { orders: any[] }
 
-      // Create and download the file
-      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
-      const link = document.createElement('a')
-      const url = URL.createObjectURL(blob)
-      link.setAttribute('href', url)
-      link.setAttribute('download', `orders-${new Date().toISOString().split('T')[0]}.csv`)
-      link.style.visibility = 'hidden'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      // Convert JSON data to Excel with proper UTF-8 encoding for Arabic characters
+      const ws = XLSX.utils.json_to_sheet(response.orders)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Orders')
+      
+      // Write to Excel file with proper encoding
+      XLSX.writeFile(wb, `orders-${new Date().toISOString().split('T')[0]}.xlsx`)
 
       toast.dismiss()
       toast.success('Orders exported successfully')
