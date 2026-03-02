@@ -34,8 +34,11 @@ import {
 } from "@/components/ui/table"
 import { api } from '@/lib/api'
 import * as XLSX from 'xlsx'
+import { useAuthStore } from '@/lib/store'
 
 export default function AteliersPage() {
+    const { user } = useAuthStore()
+    const isStockManager = user?.role === 'STOCK_MANAGER'
     const [ateliers, setAteliers] = useState<{ id: string; name: string }[]>([])
     const [receptions, setReceptions] = useState<any[]>([])
     const [isLoading, setIsLoading] = useState(true)
@@ -333,20 +336,22 @@ export default function AteliersPage() {
                         </h1>
                         <p className="text-muted-foreground">Gérer les ateliers et le suivi des réceptions (coûts et paiements)</p>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                        <Button onClick={handleExportExcel} variant="outline">
-                            <Download className="h-4 w-4 mr-2" />
-                            Excel Réceptions
-                        </Button>
-                        <Button onClick={handleExportExcelAdvanced} className="bg-green-600 hover:bg-green-700">
-                            <Download className="h-4 w-4 mr-2" />
-                            Excel Avancé (1 onglet / atelier)
-                        </Button>
-                        <Button onClick={handleDownloadExampleExcel} variant="outline" className="border-dashed">
-                            <Download className="h-4 w-4 mr-2" />
-                            Télécharger un exemple
-                        </Button>
-                    </div>
+                    {!isStockManager && (
+                        <div className="flex flex-wrap gap-2">
+                            <Button onClick={handleExportExcel} variant="outline">
+                                <Download className="h-4 w-4 mr-2" />
+                                Excel Réceptions
+                            </Button>
+                            <Button onClick={handleExportExcelAdvanced} className="bg-green-600 hover:bg-green-700">
+                                <Download className="h-4 w-4 mr-2" />
+                                Excel Avancé (1 onglet / atelier)
+                            </Button>
+                            <Button onClick={handleDownloadExampleExcel} variant="outline" className="border-dashed">
+                                <Download className="h-4 w-4 mr-2" />
+                                Télécharger un exemple
+                            </Button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Ateliers: add new */}
@@ -408,22 +413,24 @@ export default function AteliersPage() {
                     </CardContent>
                 </Card>
 
-                <div className="relative max-w-sm">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                        placeholder="Rechercher un atelier..."
-                        className="pl-8"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
+                {!isStockManager && (
+                    <>
+                        <div className="relative max-w-sm">
+                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Rechercher un atelier..."
+                                className="pl-8"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Sessions de Réception</CardTitle>
-                        <p className="text-sm text-muted-foreground">Coût total et montant payé viennent de la base de données.</p>
-                    </CardHeader>
-                    <CardContent>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Sessions de Réception</CardTitle>
+                                <p className="text-sm text-muted-foreground">Coût total et montant payé viennent de la base de données.</p>
+                            </CardHeader>
+                            <CardContent>
                         {isLoading ? (
                             <div className="text-center py-8">
                                 <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
@@ -495,6 +502,8 @@ export default function AteliersPage() {
                         )}
                     </CardContent>
                 </Card>
+                    </>
+                )}
 
                 <Dialog open={paymentModalOpen} onOpenChange={setPaymentModalOpen}>
                     <DialogContent>
