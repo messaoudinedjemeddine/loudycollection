@@ -88,6 +88,7 @@ interface Order {
   customerName: string
   customerPhone: string
   customerEmail?: string
+  customerInstagram?: string
   total: number
   subtotal: number
   deliveryFee: number
@@ -803,6 +804,9 @@ function OrdersContent() {
                               {order.customerName}
                             </span>
                             <span className="text-xs text-muted-foreground">{order.customerPhone}</span>
+                            {order.customerInstagram && (
+                              <span className="text-xs text-blue-600 mt-0.5">@{order.customerInstagram}</span>
+                            )}
                           </div>
                         </TableCell>
 

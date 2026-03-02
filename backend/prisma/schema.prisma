@@ -203,6 +203,7 @@ model Order {
   customerName     String
   customerPhone    String
   customerEmail    String?
+  customerInstagram String?           // Instagram account (optional)
   deliveryType     DeliveryType
   deliveryAddress  String?
   deliveryFee      Float             @default(0)

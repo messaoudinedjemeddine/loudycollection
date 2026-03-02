@@ -53,6 +53,7 @@ export default function CheckoutPage() {
   const [formData, setFormData] = useState<{
     customerName: string
     customerPhone: string
+    customerInstagram: string
     deliveryType: 'HOME_DELIVERY' | 'PICKUP'
     wilayaId: string
     wilayaName: string
@@ -65,6 +66,7 @@ export default function CheckoutPage() {
   }>({
     customerName: '',
     customerPhone: '',
+    customerInstagram: '',
     // customerEmail removed
     deliveryType: 'HOME_DELIVERY',
     wilayaId: '',
@@ -371,6 +373,7 @@ export default function CheckoutPage() {
       const orderData = {
         customerName: formData.customerName,
         customerPhone: formData.customerPhone,
+        customerInstagram: formData.customerInstagram || undefined,
         // customerEmail removed
         deliveryType: formData.deliveryType as 'HOME_DELIVERY' | 'PICKUP',
         deliveryAddress: formData.deliveryType === 'HOME_DELIVERY' ? formData.deliveryAddress : undefined,
@@ -500,6 +503,16 @@ export default function CheckoutPage() {
                       {validationErrors.customerPhone && (
                         <p className="text-red-500 text-sm mt-1">{validationErrors.customerPhone}</p>
                       )}
+                    </div>
+                    <div>
+                      <Label htmlFor="customerInstagram">حساب الإنستغرام (اختياري)</Label>
+                      <Input
+                        id="customerInstagram"
+                        value={formData.customerInstagram}
+                        onChange={(e) => handleInputChange('customerInstagram', e.target.value)}
+                        placeholder="@username"
+                        className="text-right"
+                      />
                     </div>
                   </div>
                 </CardContent>

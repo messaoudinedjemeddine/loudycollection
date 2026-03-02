@@ -81,6 +81,7 @@ interface Order {
   customerName: string
   customerPhone: string
   customerEmail?: string
+  customerInstagram?: string
   total: number
   subtotal: number
   deliveryFee: number
@@ -1129,6 +1130,11 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                     <div className="flex items-center space-x-2">
                       <Mail className="w-4 h-4 text-muted-foreground" />
                       <span>{order.customerEmail}</span>
+                    </div>
+                  )}
+                  {order.customerInstagram && (
+                    <div className="flex items-center space-x-2">
+                      <span className="text-blue-600 font-medium">@{order.customerInstagram}</span>
                     </div>
                   )}
                   <div className="flex items-center space-x-2">
