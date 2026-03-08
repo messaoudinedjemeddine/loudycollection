@@ -1,5 +1,5 @@
-const CACHE_NAME = 'loud-brands-v4';
-const RUNTIME_CACHE = 'loud-brands-runtime-v4';
+const CACHE_NAME = 'loud-brands-v6';
+const RUNTIME_CACHE = 'loud-brands-runtime-v6';
 
 // Assets to cache immediately on install
 const STATIC_ASSETS = [
@@ -52,9 +52,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Skip cross-origin requests (like Cloudinary or Heroku APIs) 
-  // to avoid strict CSP connect-src violations enforced by Vercel
-  if (url.origin !== self.location.origin) {
+  // Allow Cloudinary, Backend API, and your own origin
+  const allowedOrigins = [
+    self.location.origin,
+    'https://res.cloudinary.com',
+    'https://loudbrands-backend-eu-abfa65dd1df6.herokuapp.com'
+  ];
+
+  if (!allowedOrigins.includes(url.origin)) {
     return;
   }
 
