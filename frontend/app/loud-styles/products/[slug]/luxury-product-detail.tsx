@@ -817,21 +817,7 @@ export default function LuxuryProductDetail({ product: initialProduct }: LuxuryP
                         onClick={(e) => {
                           if (!variant.isCurrent) {
                             e.preventDefault();
-                            window.history.pushState({}, '', `/loud-styles/products/${variant.slug}?brand=loud-styles`);
-                            // Normalize images to string array
-                            const rawImages = variant.fullProduct.images && variant.fullProduct.images.length > 0
-                              ? variant.fullProduct.images
-                              : (variant.fullProduct.image ? [variant.fullProduct.image] : ['/placeholder.svg']);
-                            const normalizedImages = rawImages.map((img: any) =>
-                              typeof img === 'string' ? img : (img?.url || img?.src || '/placeholder.svg')
-                            );
-                            const safeProduct = {
-                              ...variant.fullProduct,
-                              images: normalizedImages
-                            };
-                            setProduct(safeProduct);
-                            setCurrentImageIndex(0);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            router.push(`/loud-styles/products/${variant.slug}?brand=loud-styles`);
                           }
                         }}
                         className={`group relative flex flex-col items-center gap-1.5 transition-all duration-300 ${variant.isCurrent
