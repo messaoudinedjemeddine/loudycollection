@@ -63,8 +63,8 @@ export function LoudStylesNavbar() {
     { name: isRTL ? 'الفئات' : 'Categories', href: '/loud-styles/categories' },
   ]
 
-  const logoText = 'LOUD'
-  const logoSubtext = 'STYLES'
+  const logoText = 'LOUDY'
+  const logoSubtext = 'COLLECTION'
 
   useEffect(() => {
     setMounted(true)

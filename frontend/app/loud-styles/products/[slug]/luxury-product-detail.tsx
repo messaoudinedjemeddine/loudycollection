@@ -807,12 +807,12 @@ export default function LuxuryProductDetail({ product }: LuxuryProductDetailProp
                   <h3 className="text-base sm:text-lg font-semibold text-foreground">
                     {isRTL ? 'اللون' : 'Color'}
                   </h3>
-                  <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                     {colorVariants.map((variant) => (
                       <Link
                         key={variant.slug}
                         href={`/loud-styles/products/${variant.slug}?brand=loud-styles`}
-                        className={`group relative flex items-center gap-2 sm:gap-3 transition-all duration-300 ${variant.isCurrent
+                        className={`group relative flex flex-col items-center gap-1.5 transition-all duration-300 ${variant.isCurrent
                           ? 'opacity-100'
                           : 'opacity-60 hover:opacity-100'
                           }`}
@@ -827,12 +827,12 @@ export default function LuxuryProductDetail({ product }: LuxuryProductDetailProp
                           }}
                         >
                           {variant.isCurrent && (
-                            <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="absolute top-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
                               <Check className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: variant.hexColor === '#FFFFFF' || variant.hexColor === '#FDFBF7' || variant.hexColor === '#F5F5DC' ? '#000000' : '#FFFFFF' }} />
                             </div>
                           )}
                         </div>
-                        <span className={`text-sm sm:text-base font-medium ${variant.isCurrent
+                        <span className={`text-xs sm:text-sm font-medium text-center ${variant.isCurrent
                           ? 'text-primary font-semibold'
                           : 'text-foreground'
                           }`}>
