@@ -169,45 +169,47 @@ export default function LuxuryProductDetail({ product: initialProduct }: LuxuryP
         ];
 
         const colorHexMap: Record<string, string> = {
-          'Noir': '#000000',
-          'Black': '#000000',
-          'Bleu': '#0000FF',
-          'Blue': '#0000FF',
+          'Noir': '#1A1A1A',
+          'Noire': '#1A1A1A',
+          'Black': '#1A1A1A',
           'Blanc': '#FFFFFF',
-          'Blanc Casse': '#FDFBF7',
           'White': '#FFFFFF',
-          'Rose': '#FFC0CB',
-          'Rouge': '#FF0000',
-          'Red': '#FF0000',
-          'Rouge Brique': '#CB4154',
-          'Vert': '#008000',
-          'Beige': '#F5F5DC',
-          'Bordeaux': '#800000',
-          'Bordeau': '#800000',
+          'Blanc Casse': '#F5F5DC',
+          'Beige': '#D2B48C',
           'Gris': '#808080',
-          'Marron': '#A52A2A',
-          'Maron': '#A52A2A',
-          'Fayrouzi': '#40E0D0',
-          'Aubergine': '#4A0E4E',
-          'Pistache': '#93C572',
-          'Orange': '#FFA500',
+          'Bordeaux': '#6D0E0E',
+          'Bordeau': '#6D0E0E',
+          'Rouge': '#B22222',
+          'Red': '#B22222',
+          'Rouge Brique': '#A5522E',
+          'Marron': '#4B3621',
+          'Maron': '#4B3621',
+          'Aubergine': '#3B0910',
+          'Bleu': '#0047AB',
+          'Blue': '#0047AB',
           'Bleu Roi': '#4169E1',
           'Blue Roi': '#4169E1',
           'Royal Blue': '#4169E1',
           'Bleu Nuit': '#191970',
           'Blue Nuit': '#191970',
-          'Bleu Fayrouz': '#00CED1',
-          'Blue Fayrouz': '#00CED1',
+          'Bleu Fayrouz': '#84d1a8',
+          'Blue Fayrouz': '#84d1a8',
+          'Fayrouzi': '#84d1a8',
           'Bleu Turquoise': '#40E0D0',
-          'Vert Olive': '#808000',
-          'Vert D\'Eau': '#B0E0E6',
-          'Vert Kaki': '#C3B091',
+          'Vert': '#006400',
+          'Vert Olive': '#556B2F',
+          'Vert Bouteille': '#004225',
+          'Vert Emreraude': '#50C878',
           'Vert Émreraude': '#50C878',
-          'Vert Bouteille': '#006A4E',
-          'Aubergine/Beige': '#7B3F00',
-          'Noir/Rouge': '#800020',
-          'Rose/Gris': '#C0C0C0',
-          'Noire': '#000000'
+          'Vert Kaki': '#8B864E',
+          'Vert D\'Eau': '#A0D6B4',
+          'Pistache': '#93C572',
+          'Rose': '#FFC0CB',
+          'Orange': '#FF8C00',
+          // Gradients for two-tone colors
+          'Aubergine/Beige': 'linear-gradient(135deg, #3B0910 50%, #D2B48C 50%)',
+          'Noir/Rouge': 'linear-gradient(135deg, #1A1A1A 50%, #B22222 50%)',
+          'Rose/Gris': 'linear-gradient(135deg, #FFC0CB 50%, #808080 50%)'
         };
 
         const extractColorFromName = (name: string): string | null => {
@@ -855,13 +857,15 @@ export default function LuxuryProductDetail({ product: initialProduct }: LuxuryP
                             ? 'border-primary shadow-lg scale-110'
                             : 'border-border hover:border-primary/50 cursor-pointer'
                             }`}
-                          style={{
-                            backgroundColor: variant.hexColor || (variant.color === 'black' ? '#000000' : '#722F37')
-                          }}
+                          style={
+                            variant.hexColor?.startsWith('linear-gradient')
+                              ? { background: variant.hexColor }
+                              : { backgroundColor: variant.hexColor || '#1A1A1A' }
+                          }
                         >
                           {variant.isCurrent && (
                             <div className="absolute top-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-                              <Check className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: variant.hexColor === '#FFFFFF' || variant.hexColor === '#FDFBF7' || variant.hexColor === '#F5F5DC' ? '#000000' : '#FFFFFF' }} />
+                              <Check className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: variant.hexColor === '#FFFFFF' || variant.hexColor === '#F5F5DC' || variant.hexColor === '#FFC0CB' || variant.hexColor === '#D2B48C' ? '#000000' : '#FFFFFF' }} />
                             </div>
                           )}
                         </div>
